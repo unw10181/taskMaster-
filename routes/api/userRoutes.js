@@ -5,9 +5,9 @@ const { signToken } = require("../../utils/auth");
 router.post("/register", async (req, res) => {
   try {
     const user = await User.create(req.body);
-    const token = signToken(user);
-    res.json({ token, user });
+    res.status(201).json(user);
   } catch (err) {
+    console.error("REGISTER ERROR:", err); // logging error occuring in parse
     res.status(400).json(err);
   }
 });
