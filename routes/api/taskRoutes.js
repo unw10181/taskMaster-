@@ -19,5 +19,15 @@ router.post("/projects/:projectId/tasks", async (req, res) => {
   res.json(task);
 });
 
+// Get tasks for project
+router.get("/projects/:projectId/tasks", async (req, res) => {
+  const project = await Project.findById(req.params.projectId);
+  if (!project || project.user.toString() !== req.user._id) {
+    return res.status(403).json({ message: "Forbidden" });
+  }
+
+  const tasks = await Task.find({ project: project._id });
+  res.json(tasks);
+});
 
 module.exports = router;
