@@ -45,4 +45,18 @@ router.put("/tasks/:taskId", async (req, res) => {
   res.json(task);
 });
 
+// Delete task
+router.delete("/tasks/:taskId", async (req, res) => {
+  const task = await Task.findById(req.params.taskId);
+  const project = await Project.findById(task.project);
+
+  if (project.user.toString() !== req.user._id) {
+    return res.status(403).json({ message: "Forbidden" });
+  }
+
+  await task.deleteOne();
+  res.json({ message: "Task deleted" });
+});
+
+
 module.exports = router;
