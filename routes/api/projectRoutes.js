@@ -17,4 +17,13 @@ router.get("/", async (req, res) => {
   res.json(projects);
 });
 
+router.get("/:id", async (req, res) => {
+  const project = await Project.findById(req.params.id);
+  if (!project || project.user.toString() !== req.user._id) {
+    return res.status(403).json({ message: "Forbidden" });
+  }
+  res.json(project);
+});
+
+
 module.exports = router;
