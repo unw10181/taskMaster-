@@ -30,4 +30,19 @@ router.get("/projects/:projectId/tasks", async (req, res) => {
   res.json(tasks);
 });
 
+
+// Update task
+router.put("/tasks/:taskId", async (req, res) => {
+  const task = await Task.findById(req.params.taskId);
+  const project = await Project.findById(task.project);
+
+  if (project.user.toString() !== req.user._id) {
+    return res.status(403).json({ message: "Forbidden" });
+  }
+
+  Object.assign(task, req.body);
+  await task.save();
+  res.json(task);
+});
+
 module.exports = router;
