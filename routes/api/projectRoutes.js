@@ -12,6 +12,9 @@ router.post("/", async (req, res) => {
   res.json(project);
 });
 
-
+router.get("/", async (req, res) => {
+  const projects = await Project.find({ user: req.user._id });
+  res.json(projects);
+});
 
 module.exports = router;
