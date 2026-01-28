@@ -25,5 +25,24 @@ router.get("/:id", async (req, res) => {
   res.json(project);
 });
 
+router.put("/:id", async (req, res) => {
+  const project = await Project.findById(req.params.id);
+  if (!project || project.user.toString() !== req.user._id) {
+    return res.status(403).json({ message: "Forbidden" });
+  }
+  Object.assign(project, req.body);
+  await project.save();
+  res.json(project);
+});
+
+router.delete("/:id", async (req, res) => {
+  const project = await Project.findById(req.params.id);
+  if (!project || project.user.toString() !== req.user._id) {
+    return res.status(403).json({ message: "Forbidden" });
+  }
+  await project.deleteOne();
+  res.json({ message: "Project deleted" });
+});
+
 
 module.exports = router;
